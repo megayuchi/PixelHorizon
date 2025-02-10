@@ -20,6 +20,8 @@ class CGame
 	CImageData*	m_pAmmoImgData = nullptr;
 	CImageData*	m_pEnemyImgData = nullptr;
 	CImageData*	m_pMidScrollImageData = nullptr;
+	CTGAImage*	m_pMidScrollImage = nullptr;
+	DWORD m_dwMidScrollImageColorKey = 0;
 	CTGAImage*	m_pBackImage = nullptr;
 
 	//CTGAImage*	m_pCircleImage = nullptr;
@@ -56,8 +58,8 @@ class CGame
 	DWORD m_dwCurEnemiesNum = 0;
 
 	// control game status
-	void InterpolatePostion(float fAlpha);
-	void FixPostionPostion();
+	void InterpolatePosition(float fAlpha);
+	void FixPositionPosition();
 	void OnGameFrame(ULONGLONG CurTick);
 	void ProcessEnemies();
 	void OnHitEnemy(CFlightObject* pEnemy, ULONGLONG CurTick);

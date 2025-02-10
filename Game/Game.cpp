@@ -88,16 +88,17 @@ BOOL CGame::Initialize(HWND hWnd)
 	//m_pCircleImgData->Create(m_pCircleImage->GetRawImage(), m_pCircleImage->GetWidth(), m_pCircleImage->GetHeight(), m_dwCircleColorKey);
 
 	// 중간 스크롤 이미지
-	CTGAImage* pMidScrollImage = new CTGAImage;
-	if (pMidScrollImage->Load24BitsTGA("./data/mid_scroll_image.tga", 4))
+	m_pMidScrollImage = new CTGAImage;	// 속도비교를 위해서 미드스크롤 이미지는 원본 이미지도 보관해둠.
+	if (m_pMidScrollImage->Load24BitsTGA("./data/mid_scroll_image.tga", 4))
 	{
-		DWORD dwMidScrollImageColorKey = pMidScrollImage->GetPixel(5, 0);
+		DWORD dwMidScrollImageColorKey = m_pMidScrollImage->GetPixel(5, 0);
+		m_dwMidScrollImageColorKey = dwMidScrollImageColorKey;
 
 		m_pMidScrollImageData = new CImageData;
-		m_pMidScrollImageData->Create(pMidScrollImage->GetRawImage(), pMidScrollImage->GetWidth(), pMidScrollImage->GetHeight(), dwMidScrollImageColorKey);
+		m_pMidScrollImageData->Create(m_pMidScrollImage->GetRawImage(), m_pMidScrollImage->GetWidth(), m_pMidScrollImage->GetHeight(), dwMidScrollImageColorKey);
 	}
-	delete pMidScrollImage;
-	pMidScrollImage = nullptr;	
+	//delete pMidScrollImage;
+	//pMidScrollImage = nullptr;	
 
 	m_pBackImage = new CTGAImage;
 	m_pBackImage->Load24BitsTGA("./data/background.tga", 4);
@@ -117,7 +118,7 @@ void CGame::Process()
 
 	if (fElpasedTick > m_fTicksPerGameFrame)
 	{
-		FixPostionPostion();
+		FixPositionPosition();
 
 		OnGameFrame(CurTick);
 		m_PrvGameFrameTick = CurTick;
@@ -127,7 +128,7 @@ void CGame::Process()
 	else
 	{
 		float fAlpha = fElpasedTick / m_fTicksPerGameFrame;
-		InterpolatePostion(fAlpha);
+		InterpolatePosition(fAlpha);
 	}
 
 	DrawScene();
@@ -253,8 +254,13 @@ void CGame::DrawScene()
 	}
 
 	// mid scroll image
+	// 속도비교를 위해 둘중 하나를 주석처리한다.
+	
+	// 0번압축으로 출력.이쪽이 훨씬 빠르다.
 	m_pDDraw->DrawImageData(m_iMidScrollImagePosX, m_iMidScrollImagePosY, m_pMidScrollImageData);
 	
+	// 픽셀당 컬러키 비교 방식으로 출력. 0번압축보다 느리다.
+	//m_pDDraw->DrawBitmapWithColorKey(m_iMidScrollImagePosX, m_iMidScrollImagePosY, m_pMidScrollImage->GetWidth(), m_pMidScrollImage->GetHeight(), m_pMidScrollImage->GetRawImage(), m_dwMidScrollImageColorKey);
 
 	//m_pDDraw->DrawRect(sx, sy, iBoxWidth, iBoxHeight, 0xff00ff00);
 
@@ -321,7 +327,7 @@ void CGame::DrawFlightObject(CFlightObject* pFighter, int x, int y)
 {
 	m_pDDraw->DrawImageData(x, y, pFighter->GetImageData());
 }
-void CGame::InterpolatePostion(float fAlpha)
+void CGame::InterpolatePosition(float fAlpha)
 {
 	if (m_pPlayer)
 	{
@@ -340,7 +346,7 @@ void CGame::InterpolatePostion(float fAlpha)
 	}
 
 }
-void CGame::FixPostionPostion()
+void CGame::FixPositionPosition()
 {
 	if (m_pPlayer)
 	{
@@ -744,6 +750,11 @@ void CGame::Cleanup()
 	{
 		DeleteFlightObject(m_pPlayer);
 		m_pPlayer = nullptr;
+	}
+	if (m_pMidScrollImage)
+	{
+		delete m_pMidScrollImage;
+		m_pMidScrollImage = nullptr;
 	}
 	if (m_pPlayerImgData)
 	{
