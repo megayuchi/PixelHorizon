@@ -35,12 +35,22 @@
 *.exe
 *.out
 *.app
+*.ipch
+*.exp
+*.ilk
+*.log
+*.recipe
+*.tlog
+*.pdb
+*.vspscc
+*.user
+*.vssscc
 
-# Folders
-Debug/
-Release/
+# folders
+debug/
+release/
 x64/
+win32/
 ARM/
 ARM64/
-symbols/
 .vs/

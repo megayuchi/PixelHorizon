@@ -1,0 +1,8 @@
+#pragma once
+
+enum FILTER_TYPE
+{
+	FILTER_TYPE_BW,
+	FILTER_TYPE_BLUR,
+	FILTER_TYPE_EDGE
+};

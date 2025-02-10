@@ -621,24 +621,29 @@ void CDDraw::Cleanup()
 {
 	CleanupBackBuffer();
 
+	if (m_pDDPrimary)
+	{
+		m_pDDPrimary->SetClipper(nullptr);
+		m_pDDPrimary->Release();
+		m_pDDPrimary = nullptr;
+	}
 	if (m_pClipper)
 	{
 		m_pClipper->Release();
 		m_pClipper = nullptr;
 	}
-	if (m_pDDPrimary)
-	{
-		m_pDDPrimary->Release();
-		m_pDDPrimary = nullptr;
-	}
 	if (m_pDD7)
 	{
-		m_pDD7->Release();
+		ULONG ref_count = m_pDD7->Release();
+		if (ref_count)
+			__debugbreak();
 		m_pDD7 = nullptr;
 	}
 	if (m_pDD)
 	{
-		m_pDD->Release();
+		ULONG ref_count = m_pDD->Release();
+		if (ref_count)
+			__debugbreak();
 		m_pDD = nullptr;
 	}
 }

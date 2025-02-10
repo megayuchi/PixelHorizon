@@ -91,7 +91,7 @@ DWORD CImageData::CreatePerLine(const char* pDest, int iMaxMemSize, const DWORD*
 		iMaxMemSize -= sizeof(PIXEL_STREAM);
 
 		// 현재 픽셀과 다른 픽셀(컬러키 포함)을 만날때까지 진행
-		while (pSrcBits[x] == dwCurPixel && x < dwWidth)
+		while (x < dwWidth && pSrcBits[x] == dwCurPixel)
 		{
 			pStreamList[dwStreamCount].wPixelNum++;
 			x++;
