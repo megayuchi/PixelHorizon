@@ -100,7 +100,7 @@ BOOL CGame::Initialize(HWND hWnd)
 	pMidScrollImage = nullptr;	
 
 	m_pBackImage = new CTGAImage;
-	m_pBackImage->Load24BitsTGA("./data/yuki_back.tga", 4);
+	m_pBackImage->Load24BitsTGA("./data/background.tga", 4);
 
 	int iPlayerPosX = (iScreenWidth - (int)m_pPlayerImgData->GetWidth()) / 2;
 	int iPlayerPosY = (iScreenHeight - (int)m_pPlayerImgData->GetHeight()) / 2;
